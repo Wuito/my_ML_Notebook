@@ -1,0 +1,7 @@
+train,train_label,test,test_label
+0.png,0,6.png,6
+1.png,1,7.png,7
+2.png,2,8.png,8
+3.png,3,9.png,9
+4.png,4,,
+5.png,5,,

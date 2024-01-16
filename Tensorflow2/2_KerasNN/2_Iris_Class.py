@@ -19,3 +19,4 @@ model.compile(optimizer=tf.keras.optimizers.SGD(learning_rate=0.1),
               metrics=['sparse_categorical_accuracy'])
 model.fit(x_train, y_train, batch_size=32, epochs=500, validation_split=0.2, validation_freq=20)
 model.summary()
+
