@@ -57,23 +57,28 @@ model.compile(optimizer='adam',
               loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=False),
               metrics=['sparse_categorical_accuracy'])
 
+# 记录模型保存路径
 checkpoint_save_path = "./checkpoint/Baseline.ckpt"
 if os.path.exists(checkpoint_save_path + '.index'):
     print('-------------load the model-----------------')
-    model.load_weights(checkpoint_save_path)
+    model.load_weights(checkpoint_save_path)     # 如果有模型则加载后使用
 
+# 定义保存和记录数据的回调器
 cp_callback = tf.keras.callbacks.ModelCheckpoint(filepath=checkpoint_save_path,
                                                  save_weights_only=True,
                                                  save_best_only=True)
+# 设置TensorBoard输出的回调函数
+tf_callback = tf.keras.callbacks.TensorBoard(log_dir="./logs")
 
 # history = model.fit(x_train, y_train, batch_size=32, epochs=5, validation_data=(x_test, y_test), validation_freq=1,
 #                     callbacks=[cp_callback])
 # 使用数据扩充
-history = model.fit(image_gen_train.flow(x_train, y_train, batch_size=32),
-                    epochs=5, validation_data=(x_test, y_test), validation_freq=1,
-                    callbacks=[cp_callback])
+history = model.fit(image_gen_train.flow(x_train, y_train, batch_size=64),
+                    epochs=8, validation_data=(x_test, y_test), validation_freq=1,
+                    callbacks=[cp_callback, tf_callback])
 model.summary()
 
+# 保存网络权重参数
 # print(model.trainable_variables)
 file = open('./weights.txt', 'w')
 for v in model.trainable_variables:
