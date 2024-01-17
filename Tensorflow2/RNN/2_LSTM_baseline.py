@@ -64,40 +64,41 @@ model.compile(optimizer=tf.keras.optimizers.Adam(0.001),
 
 checkpoint_save_path = "./checkpoint/LSTM_stock.ckpt"   # 保存模型
 tf_model_save_path = "./checkpoint/LSTM/SH600519"   # 保存静态模型
-log_image_save_path = "./log/LSTM/SH600519/"
-os.makedirs(log_image_save_path, exist_ok=True)
+log_save_path = "./log/LSTM/SH600519"
+
+os.makedirs(log_save_path, exist_ok=True)
 
 if os.path.exists(checkpoint_save_path + '.index'):
     print('-------------load the model-----------------')
     model.load_weights(checkpoint_save_path)
 
-# cp_callback = tf.keras.callbacks.ModelCheckpoint(filepath=checkpoint_save_path,
-#                                                  save_weights_only=True,
-#                                                  save_best_only=True,
-#                                                  monitor='val_loss')
-#
-# history = model.fit(x_train, y_train, batch_size=64, epochs=50, validation_data=(x_test, y_test), validation_freq=1,
-#                     callbacks=[cp_callback])
-# model.summary()
+cp_callback = tf.keras.callbacks.ModelCheckpoint(filepath=checkpoint_save_path,
+                                                 save_weights_only=True,
+                                                 save_best_only=True,
+                                                 monitor='val_loss')
 
-# model.save(tf_model_save_path, save_format='tf')    # 保存模型为静态权重
+history = model.fit(x_train, y_train, batch_size=64, epochs=50, validation_data=(x_test, y_test), validation_freq=1,
+                    callbacks=[cp_callback])
+model.summary()
 
-# file = open('./weights.txt', 'w')  # 参数提取
-# for v in model.trainable_variables:
-#     file.write(str(v.name) + '\n')
-#     file.write(str(v.shape) + '\n')
-#     file.write(str(v.numpy()) + '\n')
-# file.close()
-#
-# loss = history.history['loss']
-# val_loss = history.history['val_loss']
+model.save(tf_model_save_path, save_format='tf')    # 保存模型为静态权重
 
-# plt.plot(loss, label='Training Loss')
-# plt.plot(val_loss, label='Validation Loss')
-# plt.title('Training and Validation Loss')
-# plt.legend()
-# plt.savefig(log_image_save_path+"loss.png", dpi=60)
-# plt.show()
+file = open(log_save_path+'/weights.txt', 'w')  # 参数提取
+for v in model.trainable_variables:
+    file.write(str(v.name) + '\n')
+    file.write(str(v.shape) + '\n')
+    file.write(str(v.numpy()) + '\n')
+file.close()
+
+loss = history.history['loss']
+val_loss = history.history['val_loss']
+
+plt.plot(loss, label='Training Loss')
+plt.plot(val_loss, label='Validation Loss')
+plt.title('Training and Validation Loss')
+plt.legend()
+plt.savefig(log_save_path+"/loss.png", dpi=60)
+plt.show()
 
 ################## predict ######################
 # 测试集输入模型进行预测
@@ -113,7 +114,7 @@ plt.title('MaoTai Stock Price Prediction')
 plt.xlabel('Time')
 plt.ylabel('MaoTai Stock Price')
 plt.legend()
-plt.savefig(log_image_save_path+"predict.png", dpi=120)
+plt.savefig(log_save_path+"/predict.png", dpi=120)
 plt.show()
 
 ##########evaluate##############
