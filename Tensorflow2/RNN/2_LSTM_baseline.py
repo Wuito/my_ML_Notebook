@@ -44,11 +44,11 @@ x_train = np.reshape(x_train, (x_train.shape[0], 60, 1))
 # 测试集：csv表格中后300天数据
 # 利用for循环，遍历整个测试集，提取测试集中连续60天的开盘价作为输入特征x_train，第61天的数据作为标签，for循环共构建300-60=240组数据。
 for i in range(60, len(test_set)):
-    x_test.append(test_set[i - 60:i, 0])
+    x_test.append(test_set[i - 60:i, 0])    # 每60天的数据为一组输入预测一次输出
     y_test.append(test_set[i, 0])
 # 测试集变array并reshape为符合RNN输入要求：[送入样本数， 循环核时间展开步数， 每个时间步输入特征个数]
-x_test, y_test = np.array(x_test), np.array(y_test)
-x_test = np.reshape(x_test, (x_test.shape[0], 60, 1))
+x_test, y_test = np.array(x_test), np.array(y_test) # x_test.shape=(240, 60)
+x_test = np.reshape(x_test, (x_test.shape[0], 60, 1))   # 调整数据维度 x_test.shape=(240, 60, 1)
 
 model = tf.keras.Sequential([
     LSTM(80, return_sequences=True),
@@ -62,37 +62,42 @@ model.compile(optimizer=tf.keras.optimizers.Adam(0.001),
               loss='mean_squared_error')  # 损失函数用均方误差
 # 该应用只观测loss数值，不观测准确率，所以删去metrics选项，一会在每个epoch迭代显示时只显示loss值
 
-checkpoint_save_path = "./checkpoint/LSTM_stock.ckpt"
+checkpoint_save_path = "./checkpoint/LSTM_stock.ckpt"   # 保存模型
+tf_model_save_path = "./checkpoint/LSTM/SH600519"   # 保存静态模型
+log_image_save_path = "./log/LSTM/SH600519/"
+os.makedirs(log_image_save_path, exist_ok=True)
 
 if os.path.exists(checkpoint_save_path + '.index'):
     print('-------------load the model-----------------')
     model.load_weights(checkpoint_save_path)
 
-cp_callback = tf.keras.callbacks.ModelCheckpoint(filepath=checkpoint_save_path,
-                                                 save_weights_only=True,
-                                                 save_best_only=True,
-                                                 monitor='val_loss')
+# cp_callback = tf.keras.callbacks.ModelCheckpoint(filepath=checkpoint_save_path,
+#                                                  save_weights_only=True,
+#                                                  save_best_only=True,
+#                                                  monitor='val_loss')
+#
+# history = model.fit(x_train, y_train, batch_size=64, epochs=50, validation_data=(x_test, y_test), validation_freq=1,
+#                     callbacks=[cp_callback])
+# model.summary()
 
-history = model.fit(x_train, y_train, batch_size=64, epochs=50, validation_data=(x_test, y_test), validation_freq=1,
-                    callbacks=[cp_callback])
+# model.save(tf_model_save_path, save_format='tf')    # 保存模型为静态权重
 
-model.summary()
+# file = open('./weights.txt', 'w')  # 参数提取
+# for v in model.trainable_variables:
+#     file.write(str(v.name) + '\n')
+#     file.write(str(v.shape) + '\n')
+#     file.write(str(v.numpy()) + '\n')
+# file.close()
+#
+# loss = history.history['loss']
+# val_loss = history.history['val_loss']
 
-file = open('./weights.txt', 'w')  # 参数提取
-for v in model.trainable_variables:
-    file.write(str(v.name) + '\n')
-    file.write(str(v.shape) + '\n')
-    file.write(str(v.numpy()) + '\n')
-file.close()
-
-loss = history.history['loss']
-val_loss = history.history['val_loss']
-
-plt.plot(loss, label='Training Loss')
-plt.plot(val_loss, label='Validation Loss')
-plt.title('Training and Validation Loss')
-plt.legend()
-plt.show()
+# plt.plot(loss, label='Training Loss')
+# plt.plot(val_loss, label='Validation Loss')
+# plt.title('Training and Validation Loss')
+# plt.legend()
+# plt.savefig(log_image_save_path+"loss.png", dpi=60)
+# plt.show()
 
 ################## predict ######################
 # 测试集输入模型进行预测
@@ -108,6 +113,7 @@ plt.title('MaoTai Stock Price Prediction')
 plt.xlabel('Time')
 plt.ylabel('MaoTai Stock Price')
 plt.legend()
+plt.savefig(log_image_save_path+"predict.png", dpi=120)
 plt.show()
 
 ##########evaluate##############
