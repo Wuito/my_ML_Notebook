@@ -1,3 +1,6 @@
+# 学习率衰减函数
+# 分别使用指数衰减学习率和分段学习率
+
 import tensorflow as tf
 from matplotlib import pyplot as plt
 

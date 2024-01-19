@@ -1,3 +1,5 @@
+# 实例正则化的功能，分别使用L1正则和L2正则
+
 # 导入所需模块
 import tensorflow as tf
 from matplotlib import pyplot as plt

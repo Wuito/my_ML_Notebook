@@ -1,3 +1,6 @@
+# 认识基本的网络操作： 学习率、损失函数、反向传播
+# 不同学习率对反向传播的影响
+
 import tensorflow as tf
 import matplotlib.pyplot as plt
 import numpy as np
@@ -9,7 +12,7 @@ epoch = 50 # 迭代50次
 losses = []
 for lrs in lr:
     wegt = tf.Variable(tf.constant(5, dtype=tf.float32))	# 定义了值为5，数据类型为float32
-    for epoch in range(epoch):
+    for epoch in range(epoch):      # 迭代
         with tf.GradientTape() as tape:	        # 创建上下文管理器，用于记录网络训练的过程
             loss = tf.square(wegt + 1)	        # 计算损失函数的值，在tf.GradientTape上下文中，损失函数是loss = (wegt + 1)的平方
         grads = tape.gradient(loss, wegt)	    # 利用上下文管理器记录的信息，gradient()函数自动求微分，计算损失相对于权重 wegt 的梯度
