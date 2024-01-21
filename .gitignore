@@ -2,3 +2,6 @@ checkpoint
 /Tensorflow2/2_KerasNN/logs
 /.idea
 /Tensorflow2/4_RNN/log
+/Tensorflow2/3_CNN/logs
+/Tensorflow2/5_tflite/export
+/Tensorflow2/5_tflite/log
