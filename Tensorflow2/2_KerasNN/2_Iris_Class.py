@@ -13,6 +13,7 @@ np.random.seed(116)
 np.random.shuffle(y_train)
 tf.random.set_seed(116)
 
+# 定义网络结构
 class IrisModel(Model):
     def __init__(self):
         super(IrisModel, self).__init__()
@@ -21,9 +22,9 @@ class IrisModel(Model):
     def call(self, x):
         y = self.d1(x)
         return y
-
+# 实例化化模型
 model = IrisModel()
-
+# 初始化模型
 model.compile(optimizer=tf.keras.optimizers.SGD(lr=0.1),
               loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=False),
               metrics=['sparse_categorical_accuracy'])
