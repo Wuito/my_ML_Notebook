@@ -45,8 +45,8 @@ model.compile(optimizer='adam',
               loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=False),
               metrics=['sparse_categorical_accuracy'])
 
-checkpoint_save_path = "./checkpoint/Baseline.ckpt"
-if os.path.exists(checkpoint_save_path + '.index'):
+checkpoint_save_path = "./checkpoint/cifar10/Baseline.ckpt"
+if os.path.exists(checkpoint_save_path + '.index'):     #
     print('-------------load the model-----------------')
     model.load_weights(checkpoint_save_path)
 
@@ -59,7 +59,7 @@ history = model.fit(x_train, y_train, batch_size=32, epochs=5, validation_data=(
 model.summary()
 
 # print(model.trainable_variables)
-file = open('./weights.txt', 'w')
+file = open('./checkpoint/cifar10/weights.txt', 'w')
 for v in model.trainable_variables:
     file.write(str(v.name) + '\n')
     file.write(str(v.shape) + '\n')
