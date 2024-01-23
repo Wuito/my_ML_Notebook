@@ -23,8 +23,8 @@ grid on;
  ab_start = [100 ; 2];   % 设置一个初始值
  
  % 学习率
- learning_reate = 0.00002; 
- %learning_reate = [0.001 0; 0 0.00001]; % 使用二阶学习率适应原始数据的倍率
+ %learning_reate = 0.00002; 
+ learning_reate = [0.001 0; 0 0.00001]; % 使用二阶学习率适应原始数据的倍率
     
  % 迭代
  for i = 1:100000
