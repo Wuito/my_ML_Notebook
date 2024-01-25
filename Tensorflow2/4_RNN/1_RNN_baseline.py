@@ -45,6 +45,9 @@ if os.path.exists(checkpoint_save_path + '.index'):
     print('-------------load the model-----------------')
     model.load_weights(checkpoint_save_path)
 
+# 第一个参数是输入神经元的个数
+# `activation`：选择激活函数，由于循环核的计算特性一般均使用“tanh”激活函数，对应了序列输入序列输出
+# `return_sequences`：是一个bool型变量，为True时每个循环核的输出都是有效数据，为false时只有最后一个神经元的输出是有效数据。序列输入单个输出
 cp_callback = tf.keras.callbacks.ModelCheckpoint(filepath=checkpoint_save_path,
                                                  save_weights_only=True,
                                                  save_best_only=True,
